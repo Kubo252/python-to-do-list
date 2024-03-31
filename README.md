@@ -2,8 +2,8 @@
 Tento repozitár obsahuje zdrojový kód webovej aplikácie, ktorá slúži ako to-do list
 
 # Komponenty
-Web - frontend - html, css
-    - backend - Python Flask
+Web - frontend - html, css.
+    - backend - Python Flask.
 Databáza - PostgreSQL
 Databáza pgAdmin - Správa PostgreSQL
 
