@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - "DATABASE_HOST=database"
+      - "DATABASE_NAME=postgres"
+      - "DATABASE_USER=postgres"
+      - "DATABASE_PASSWORD=mysecretpassword"
+
+  database:
+    image: postgres
+    volumes:
+    - ./data:/var/lib/postgresql/data
+  
+  database-pgAdmin:
+    image: dpage/pgadmin4
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL=j@gmail.com"
+      - "PGADMIN_DEFAULT_PASSWORD=heslo"
+    ports:
+      - "443:80"
+    volumes:
+      - ./pgAdmin:/var/lib/pgadmin

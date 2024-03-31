@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Todo List</title>
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+      margin: 1%;
+    }
+
+    .task-column {
+      background-color: #f2f2f2;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .task {
+      cursor: pointer;
+    }
+
+    .tasks{
+      position: relative;
+    }
+
+    .delete-button {
+      position: absolute;
+      margin-top: -6%;
+      right: 0;
+      border-radius: 15px;
+    }
+
+    .btn-success{
+      border-radius: 15px;
+    }
+
+    .feedback{
+      margin: 1%;
+    }
+  </style>
+</head>
+<body>
+  {% if feedback_message %}
+    <div class="feedback">
+      {{ feedback_message }}
+    </div>
+  {% endif %}
+  <div class="grid-container">
+    <div class="task-column">
+      <h2>Todo</h2>
+      <div class="tasks">
+        {% for task in todo_tasks %}
+        <div class="task" onclick="moveTask('{{ task[0] }}', 'doing')"> {{ task[1] }}</div><br>
+        {% endfor %}
+      </div>
+      <form id="todoForm" action="/add_task" method="POST" onsubmit="return validateForm()">
+        <input type="text" id="taskInput" name="task_name" placeholder="New Task">
+        <input type="submit" value="Enter new task" class="btn-success">
+      </form>
+    </div>
+    <div class="task-column">
+      <h2>Doing</h2>
+      <div class="tasks">
+        {% for task in doing_tasks %}
+        <div class="task" onclick="moveTask('{{ task[0] }}', 'done')"> {{ task[1] }}</div><br>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="task-column">
+      <h2>Done</h2>
+      <div class="tasks">
+        {% for task in done_tasks %}
+        <div class="task" onclick="moveTask('{{ task[0] }}', 'doing')"> {{ task[1] }}</div>
+        <button class="delete-button btn-danger" onclick="deleteTask('{{ task[0] }}')">Delete</button><br>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <form id="moveForm" action="/move_task" method="POST">
+    <input type="hidden" id="taskId" name="task_id">
+    <input type="hidden" id="targetStatus" name="status">
+  </form>
+  <form id="deleteForm" action="/delete_task" method="POST">
+    <input type="hidden" id="taskIdToDelete" name="task_id">
+  </form>
+  <script>
+    function validateForm() {
+      var taskInput = document.getElementById('taskInput').value.trim();
+      if (taskInput === '') {
+        alert('Please enter a task.');
+        return false;
+      }
+      return true;
+    }
+
+    function moveTask(taskId, targetStatus) {
+      document.getElementById('taskId').value = taskId;
+      document.getElementById('targetStatus').value = targetStatus;
+      document.getElementById('moveForm').submit();
+    }
+
+    function deleteTask(taskId) {
+      if (confirm("Are you sure you want to delete this task?")) {
+        document.getElementById('taskIdToDelete').value = taskId;
+        document.getElementById('deleteForm').submit();
+      }
+    }
+  </script>
+</body>
+</html>
